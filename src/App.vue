@@ -5,6 +5,7 @@ export default {
     return {
       songs: [],
       newSongParams: {},
+      editSongParams: {},
       currentSong: {},
     };
   },
@@ -32,7 +33,19 @@ export default {
     },
     showSong: function (song) {
       this.currentSong = song;
+      this.editSongParams = song;
       document.querySelector("#song-details").showModal();
+    },
+    updateSong: function (song) {
+      axios
+        .patch("/songs/" + song.id + ".json", this.editSongParams)
+        .then((response) => {
+          console.log("songs update", response);
+          this.currentSong = {};
+        })
+        .catch((error) => {
+          console.log("songs update error", error.response);
+        });
     },
   },
 };
@@ -63,10 +76,23 @@ export default {
     <dialog id="song-details">
       <form method="dialog">
         <h1>Song Info</h1>
-        <p>Title: {{ currentSong.title }}</p>
-        <p>Artist: {{ currentSong.artist }}</p>
-        <p>Album: {{ currentSong.album }}</p>
-        <p>Duration: {{ currentSong.duration }}</p>
+        <p>
+          Title:
+          <input type="text" v-model="editSongParams.title" />
+        </p>
+        <p>
+          Artist:
+          <input type="text" v-model="editSongParams.artist" />
+        </p>
+        <p>
+          Album:
+          <input type="text" v-model="editSongParams.album" />
+        </p>
+        <p>
+          Duration:
+          <input type="text" v-model="editSongParams.duration" />
+        </p>
+        <button v-on:click="updateSong(currentSong)">Update</button>
         <button>Close</button>
       </form>
     </dialog>
