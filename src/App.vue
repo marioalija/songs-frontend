@@ -5,6 +5,7 @@ export default {
     return {
       songs: [],
       newSongParams: {},
+      currentSong: {},
     };
   },
   created: function () {
@@ -28,6 +29,10 @@ export default {
         .catch((error) => {
           console.log("songs create error", error.response);
         });
+    },
+    showSong: function (song) {
+      this.currentSong = song;
+      document.querySelector("#song-details").showModal();
     },
   },
 };
@@ -53,7 +58,18 @@ export default {
       <p>Artist: {{ song.artist }}</p>
       <p>Albun: {{ song.album }}</p>
       <p>Duration: {{ song.duration }}</p>
+      <button v-on:click="showSong(song)">More info</button>
     </div>
+    <dialog id="song-details">
+      <form method="dialog">
+        <h1>Song Info</h1>
+        <p>Title: {{ currentSong.title }}</p>
+        <p>Artist: {{ currentSong.artist }}</p>
+        <p>Album: {{ currentSong.album }}</p>
+        <p>Duration: {{ currentSong.duration }}</p>
+        <button>Close</button>
+      </form>
+    </dialog>
   </div>
 </template>
 
